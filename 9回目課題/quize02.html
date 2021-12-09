@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="css/sample.css">
+<title>クイズ</title>
+</head>
+<body>
+</div>
+<header>
+    <h1 id=dai>クリスマス ⚪︎×クイズ</h1>
+    <h1 id=dai>クリスマス ⚪︎×クイズ</h1>
+</header>
+
+<main>
+  <p id="quest">ここに問題が出題されます</p>
+    <button type="button" name="toi" value="1" id="toi1"></button>
+    <button type="button" name="toi" value="2" id="toi2"></button>
+  </p>
+  <h2 id="kotae"></h2>
+  <h3 id="kaisetu"></h3>
+
+  <fooder>
+    <button type="button1" id=tensuu>採点</button>
+  </fooder>
+
+<script>
+//ここから記述領域［START］
+
+  //以下に配列を記述してください。
+  //問題数[配列]
+  const dai=[
+    "1問目","2問目","3問目","4問目","5問目","6問目" ];
+
+  //問題文[配列]
+const qs =[
+  "クリスマスは、イエス・キリストの誕生をお祝いする日である。",
+  "イエス・キリストは12月25日に生まれた。",
+  "サンタクロースにはモデルとなる人物がいた。",
+  "クリスマスツリーに使うのは、モミの木である。",
+  "クリスマスカラーといえば赤、緑、黄の３色である。",
+  "クリスマスソング「ジングルベル」に登場する、そりを引く動物はトナカイである。"
+  ];
+    
+  //回答選択肢[多重配列]
+const toi =[
+  ["○","×"],
+  ["○","×"],
+  ["○","×"], 
+  ["○","×"], 
+  ["○","×"], 
+  ["○","×"]
+];
+    
+  //答え[配列]
+const ans =[1, 2, 1, 1, 2, 2];
+
+//解説[配列]
+const kaisetu =[
+  "クリスマスは、イエス・キリストの誕生をお祝いする世界最大規模のお祭りです。",
+  "クリスマスはキリストの誕生を祝う日ですが、キリストが12月25日に生まれたかどうかは不明です。",
+  "4世紀頃にトロコで貧しい人に手を差し伸べた「ニコラウス」という司教がサンタクロースのモデルになっています。",
+  "モミの木は「永遠の命」を象徴とされています。",
+  "キリストが流した血の象徴である「赤」、クリスマスに飾る木の色である「緑」、キリストが生まれたときに輝いたと言われるベツレヘムの星の色である「金」、純潔の象徴である「白」の4色です。",
+  "この曲の海外名称は「One Horse Open Sleigh 」つまり、馬のそりの歌でした。",
+  ];
+
+  //1.最初の問題文＆回答選択肢＆回答値を設定
+let i=0;
+$("#dai").text(dai[i] );
+$("#quest").text(qs[i] );
+$("#toi1").text(toi[i][0]);
+$("#toi2").text(toi[i][1]);
+$("#toi3").text(toi[i][2]);
+$("#toi4").text(toi[i][3]);
+$("#toi5").text(toi[i][4]);
+$("#toi6").text(toi[i][5]);
+
+  //2.ボタンをクリックしたらイベント発生！(クリックイベント)
+  $("[name=toi]").on("click",function(){
+     $("#kaisetu").text(kaisetu[i]);
+    const v =$(this).val();
+    for(let i =0; i<6; i++){
+   if(ans[i] == v){
+     $("h2").text("正解");
+   }
+   else {
+    $("h2").text("不正解");
+   }
+}
+i++;//配列に入れるいが１プラスされる
+$("#dai").text(dai[i] );
+$("#quest").text(qs[i] );
+$("#toi1").text(toi[i][0]);
+$("#toi2").text(toi[i][1]);
+$("#toi3").text(toi[i][2]);
+$("#toi4").text(toi[i][3]);
+$("#toi5").text(toi[i][4]);
+$("#toi6").text(toi[i][5]);
+})
+
+//採点
+$("[name= tensuu]").on("click",function(){
+  const tensuu =$(this).val();
+  if(tensuu== 1){
+    ("６問中1問正解");
+  }
+  else if(tensuu== 2){
+    ("６問中2問正解");
+  }
+  else if(tensuu== 3){
+    ("６問中3問正解");
+  }
+    else if(tensuu== 4){
+    ("６問中4問正解");
+  }
+    else if(tensuu== 5){
+    ("６問中5問正解");
+  }
+    else if(tensuu== 6){
+    ("全問正解！");
+}
+})
+//ここまでが記述領域［END］
+
+</script>
+</body>
+</html>
