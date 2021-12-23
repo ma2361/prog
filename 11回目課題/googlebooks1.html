@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoogoleBooksdeajaxを学ぶ</title>
+    <style>
+        body{
+            background-color: rgb(236, 255, 255);
+            text-align: center;
+        }
+        h1{
+            font-size: 50px;
+            color: rgb(71, 106, 128);
+            text-align: center;
+        }
+        #send{
+            font-size: 15px;
+            color: rgb(71, 106, 128);
+        }
+        button{
+            text-align: center;
+            color: rgb(71, 106, 128);
+        }
+        td{
+            border-top: 2px solid rgb(71, 106, 128);
+            border-bottom: 2px solid rgb(71, 106, 128);
+            border-left: 2px solid rgb(71, 106, 128);
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Book検索</h1>
+    <div>
+        <input type="text" id="key">
+        <button id="send">検索</button>
+    </div>
+    <div>
+        <table id="list">
+            <tr>
+                <td style="width:400px">書籍名</td>
+                <td style="width:200px">出版社</td>
+                <td style="width:400px">画像</td>
+            </tr>
+        </table>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        //検索ボタンをクリックしたら下が実行される
+        $("#send").on("click",function(){
+            const url = "https://www.googleapis.com/books/v1/volumes?q="+$("#key").val() ;
+        $.ajax({
+            url: url,
+            dataType: "json"
+        }).done(function(data) {
+            //書籍名、出版社、サムネイル、[リンク]
+            console.log(data);//オブジェクトの中を確認
+            const len =data.items.length; //データの数を取得
+            let html;
+            for(i=0; i<len; i++){
+                console.log(typeof data.items[0].volumeInfo.publisher);
+                if(typeof data.items[0].volumeInfo.publisher=="undefined"){
+                    data.items[0].volumeInfo.publisher="出版社（不明）"
+                };
+            html += `
+            <tr>
+                <td>${data.items[0].volumeInfo.title}</td>
+                <td>${data.items[0].volumeInfo.publisher}</td>
+                <td><a target="_black" href ="${data.items[0].volumeInfo.infoLink}">
+                    <img src ="${data.items[0].volumeInfo.imageLinks.thumbnail}"></td>
+
+                </tr>
+            ` ;
+            }
+            //table要素のid="list"に追加
+            $("#list").empty().hide().append(html).fadeIn(1000);
+        });
+        });
+        </script>
+    
+</body>
+</html>
