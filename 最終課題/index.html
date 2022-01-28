@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <title>Chatアプリ</title>
+</head>
+
+<style>
+body {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-bottom: 30px;
+  box-sizing: border-box;
+}
+
+#chat {
+  width: 100%;
+  min-height: 100vh;
+  overflow: scroll;
+  background-color: #8eb9ee;
+}
+
+.chat-input {
+  position: fixed;
+  bottom: 0;
+}
+
+.box-left {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.box-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message-box {
+  padding: 50px;
+  max-width: 40%;
+  margin: 10px;
+  border-radius: 30px;
+}
+
+.white {
+  background-color: white;
+}
+
+.green {
+  background-color:  #80cc42;
+}
+
+</style>
+
+
+<body>
+  <div id="chat">
+    <div class="box-left">
+      <p class="message-box white">こんにちは</p>
+    </div>
+    <div class="box-right"></div>
+  </div>
+
+  <div class="input-group chat-input">
+    <input id="input" type="text" class="form-control" placeholder="メッセージを入力してください" >
+    <div class="input-group-append">
+      <button id="send" class="btn btn-primary" type="button">送信</button>
+    </div>
+  </div>
+
+<!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- JQuery -->
+
+
+<script>
+  let isMySelf =true;  //送信者が自分
+  let send = document.getElementById('send');  // 送信ボタンの取得
+
+  // 送信ボタンクリック処理
+  send.addEventListener('click', function() {
+    let input = document.getElementById('input');
+    let messageText = input.value;
+    let messageBox = document.createElement('div'); // divを作成
+
+  //送信者が誰か
+  if(isMySelf){
+    messageBox.classList.add('box-right'); //自分
+  }else{
+    messageBox.classList.add('box-left'); //相手
+  }
+
+  //入力値が空か確認
+  if(messageText == ''){
+      return;
+    }
+
+  let message = document.createElement('p');// pタグ作成
+  message.textContent = messageText;
+  message.classList.add('message-box'); 
+  messageBox.appendChild(message);  // div pタグ追加
+
+  if(isMySelf){
+  message.classList.add('green'); //自分の色
+  }else{
+    message.classList.add('white'); //相手の色
+  }
+
+  let room = document.getElementById('chat');// チャット画面のタグ取得
+  room.appendChild(messageBox); // チャット画面に新規メッセージ
+  input.value = '';// 入力値をリセットする
+
+  //送信者を交互に出す
+  if(isMySelf){
+    isMySelf=false;//自分
+  }else{
+    isMySelf=true; //相手
+  }
+  })
+</script>
+
+<!--** 以下Firebase **-->
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js";
+  import {getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved } 
+  from "https://www.gstatic.com/firebasejs/9.1.1/firebase-database.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "***************************************",
+    authDomain: "***********.************.***",
+    projectId: "***********",
+    storageBucket: "***********.*******.***",
+    messagingSenderId: "************",
+    appId: "*:************:***:**********************"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const dbRef = ref(db, "chat");
+
+
+$("#send").on("click", function(){
+  const msg = {
+    text : $("#input").val()
+  }
+  const newPostRef = push(dbRef); //ユニークキー生成(ランダムでキーの名前つけてくれる)
+  set(newPostRef,msg);
+});
+    
+onChildAdded(dbRef,function(data){
+  const msg = data.val();
+  const key = data.key;
+  let h ='<p>';
+    h +=msg.text;
+    h += '</p>';
+    $("#input").append(h);
+})
+
+</script>
+</body>
+</html>
